@@ -3,59 +3,17 @@
 {% block title %}Conversation History{% endblock %}
 
 {% block content %}
-<div class="hero">
+<div class="page-header">
     <h1>Conversation History</h1>
     <p>
-        These are the saved assistant interactions stored in Django’s default database.
-        You can search by keyword or filter by date.
+        View previously saved assistant interactions. Search by keyword or filter by date.
     </p>
-</div>
-
-<div class="metrics-grid">
-    <div class="metric-card">
-        <div class="metric-icon metric-blue">📦</div>
-        <div>
-            <h3>Total Items</h3>
-            <div class="metric-value">{{ total_items }}</div>
-            <div class="metric-sub">Available item definitions</div>
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-icon metric-green">✔</div>
-        <div>
-            <h3>In Stock</h3>
-            <div class="metric-value">{{ in_stock_count }}</div>
-            <div class="metric-sub">Current available records</div>
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-icon metric-amber">!</div>
-        <div>
-            <h3>Low Stock</h3>
-            <div class="metric-value">{{ low_stock_count }}</div>
-            <div class="metric-sub">Needs attention</div>
-        </div>
-    </div>
-
-    <div class="metric-card">
-        <div class="metric-icon metric-red">✖</div>
-        <div>
-            <h3>Out of Stock</h3>
-            <div class="metric-value">{{ out_of_stock_count }}</div>
-            <div class="metric-sub">Requires restocking</div>
-        </div>
-    </div>
 </div>
 
 <div class="panel">
-    <h2>Search Saved Conversations</h2>
-    <p class="muted">
-        Search by keywords in the question or answer, and optionally filter by date.
-    </p>
+    <h2>Search Conversations</h2>
 
-    <form method="get" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px; align-items: end;">
+    <form method="get" class="form-grid">
         <div>
             <label for="q" class="muted">Keyword</label>
             <input
@@ -63,8 +21,7 @@
                 id="q"
                 name="q"
                 value="{{ search_query }}"
-                placeholder="Search by stock question or answer..."
-                style="width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft);"
+                placeholder="Search by question or answer..."
             >
         </div>
 
@@ -75,7 +32,6 @@
                 id="date"
                 name="date"
                 value="{{ search_date }}"
-                style="width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft);"
             >
         </div>
 
@@ -86,14 +42,14 @@
 </div>
 
 <div class="panel">
-    <h2>All Saved Conversations</h2>
+    <h2>Saved Chats</h2>
 
     <div class="item-list">
         {% for log in logs %}
             <div class="item-card">
                 <strong>{{ log.question }}</strong>
                 <div class="muted">Time: {{ log.created_at }}</div>
-                <div class="answer-box" style="margin-top: 10px;">
+                <div class="answer-block" style="margin-top: 10px;">
                     <pre>{{ log.answer }}</pre>
                 </div>
             </div>

@@ -1,131 +1,92 @@
 {% extends "assistant/base.html" %}
 
-{% block title %}MediCentre Stock Dashboard{% endblock %}
+{% block title %}Stock Assistant{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <h1>Good day 👋</h1>
+<div class="page-header">
+    <h1>Stock Assistant</h1>
     <p>
-        Here is your current Medicentre stock dashboard. You can view stock summary information,
-        see low stock alerts, inspect recent activity, and ask the assistant stock-related questions.
+        Ask questions about stock quantities, stock movement, batch values,
+        expiry dates, stock take sessions, and branch-linked stock items.
     </p>
-    {% if dashboard_error %}
-        <div class="error" style="margin-top: 14px;">Dashboard data could not be loaded: {{ dashboard_error }}</div>
-    {% endif %}
 </div>
 
 <div class="metrics-grid">
     <div class="metric-card">
-        <div class="metric-icon metric-blue">📦</div>
-        <div>
-            <h3>Total Items</h3>
-            <div class="metric-value">{{ total_items }}</div>
-            <div class="metric-sub">From tblitems</div>
-        </div>
+        <h3>Total Items</h3>
+        <div class="metric-value">{{ total_items }}</div>
+        <div class="metric-sub">Available item definitions</div>
     </div>
 
     <div class="metric-card">
-        <div class="metric-icon metric-green">✔</div>
-        <div>
-            <h3>In Stock</h3>
-            <div class="metric-value">{{ in_stock_count }}</div>
-            <div class="metric-sub">Available stock records</div>
-        </div>
+        <h3>In Stock</h3>
+        <div class="metric-value">{{ in_stock_count }}</div>
+        <div class="metric-sub">Available stock records</div>
     </div>
 
     <div class="metric-card">
-        <div class="metric-icon metric-amber">!</div>
-        <div>
-            <h3>Low Stock</h3>
-            <div class="metric-value">{{ low_stock_count }}</div>
-            <div class="metric-sub">At or below reorder level</div>
-        </div>
+        <h3>Low Stock</h3>
+        <div class="metric-value">{{ low_stock_count }}</div>
+        <div class="metric-sub">At or below reorder level</div>
     </div>
 
     <div class="metric-card">
-        <div class="metric-icon metric-red">✖</div>
-        <div>
-            <h3>Out of Stock</h3>
-            <div class="metric-value">{{ out_of_stock_count }}</div>
-            <div class="metric-sub">Needs restocking</div>
-        </div>
+        <h3>Out of Stock</h3>
+        <div class="metric-value">{{ out_of_stock_count }}</div>
+        <div class="metric-sub">Needs attention</div>
     </div>
 </div>
 
-<div class="grid-2">
+<div class="panel">
+    <h2>Ask a Question</h2>
+    <p class="muted">
+        Example: What kind of stock information is stored in tblitemstoragelocations?
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="question" placeholder="Ask anything about the stock module...">{{ question }}</textarea>
+        <br>
+        <button type="submit">Send</button>
+    </form>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+</div>
+
+{% if answer %}
     <div class="panel">
-        <h2>Ask the Assistant</h2>
-        <p class="muted">
-            Ask about current stock quantities, stock movement, batches, expiry dates,
-            stock take sessions, or branch-linked stock items.
-        </p>
+        <h2>Assistant Response</h2>
 
-        <form method="post">
-            {% csrf_token %}
-            <textarea name="question" placeholder="Example: What kind of stock information is stored in tblitemstoragelocations?">{{ question }}</textarea>
-            <br>
-            <button type="submit">Ask Assistant</button>
-        </form>
-
-        {% if error %}
-            <div class="error">{{ error }}</div>
+        {% if parsed_answer.direct_answer %}
+            <div class="answer-block">
+                <h3>Direct Answer</h3>
+                <p>{{ parsed_answer.direct_answer }}</p>
+            </div>
         {% endif %}
 
-        {% if answer %}
-            <div class="content-box">
-                <h2 style="margin-top: 0;">Assistant Answer</h2>
+        {% if parsed_answer.explanation %}
+            <div class="answer-block">
+                <h3>Explanation</h3>
+                <p>{{ parsed_answer.explanation }}</p>
+            </div>
+        {% endif %}
 
-                {% if parsed_answer.direct_answer %}
-                    <div class="answer-box">
-                        <h3 style="margin-top: 0;">Direct Answer</h3>
-                        <p style="margin-bottom: 0;">{{ parsed_answer.direct_answer }}</p>
-                    </div>
-                {% endif %}
+        {% if parsed_answer.relevant_tables %}
+            <div class="answer-block">
+                <h3>Relevant Table(s)</h3>
+                <p>{{ parsed_answer.relevant_tables }}</p>
+            </div>
+        {% endif %}
 
-                {% if parsed_answer.explanation %}
-                    <div class="answer-box">
-                        <h3 style="margin-top: 0;">Explanation</h3>
-                        <p style="margin-bottom: 0; line-height: 1.7;">{{ parsed_answer.explanation }}</p>
-                    </div>
-                {% endif %}
-
-                {% if parsed_answer.relevant_tables %}
-                    <div class="answer-box">
-                        <h3 style="margin-top: 0;">Relevant Table(s)</h3>
-                        <p style="margin-bottom: 0;">{{ parsed_answer.relevant_tables }}</p>
-                    </div>
-                {% endif %}
-
-                {% if not parsed_answer.direct_answer and not parsed_answer.explanation and not parsed_answer.relevant_tables %}
-                    <div class="answer-box">
-                        <pre>{{ answer }}</pre>
-                    </div>
-                {% endif %}
+        {% if not parsed_answer.direct_answer and not parsed_answer.explanation and not parsed_answer.relevant_tables %}
+            <div class="answer-block">
+                <pre>{{ answer }}</pre>
             </div>
         {% endif %}
     </div>
-
-    <div class="panel">
-        <h2>Low Stock Alerts</h2>
-        <p class="muted">These records are currently at or below reorder level.</p>
-
-        <div class="item-list">
-            {% for alert in low_stock_alerts %}
-                <div class="item-card">
-                    <strong>Storage Record #{{ alert.itemstoragelocationid }}</strong>
-                    <div class="muted">Batch: {{ alert.batch|default:"N/A" }}</div>
-                    <div class="muted">Available Quantity: {{ alert.availablequantity }}</div>
-                    <div class="muted">Reorder Level: {{ alert.reorderlevel }}</div>
-                </div>
-            {% empty %}
-                <div class="item-card">
-                    <strong>No low stock alerts found.</strong>
-                    <div class="muted">There are currently no records below reorder threshold.</div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
+{% endif %}
 
 <div class="grid-2">
     <div class="panel">
@@ -137,7 +98,7 @@
                 <div class="item-card">
                     <strong>{{ activity.reference|default:"No reference" }}</strong>
                     <div class="muted">Quantity Changed: {{ activity.quantitychanged }}</div>
-                    <div class="muted">
+                    <div class="muted" style="margin-top: 6px;">
                         {% if activity.isincrement == 1 %}
                             <span class="badge badge-green">Increment</span>
                         {% else %}
@@ -155,21 +116,20 @@
     </div>
 
     <div class="panel">
-        <h2>Recent Conversations</h2>
-        <p class="muted">Latest assistant interactions saved in Django.</p>
+        <h2>Low Stock Alerts</h2>
+        <p class="muted">Records currently at or below reorder level.</p>
 
         <div class="item-list">
-            {% for log in recent_logs %}
+            {% for alert in low_stock_alerts %}
                 <div class="item-card">
-                    <strong>{{ log.question }}</strong>
-                    <div class="muted">Time: {{ log.created_at }}</div>
-                    <div class="answer-box" style="margin-top: 10px;">
-                        <pre>{{ log.answer }}</pre>
-                    </div>
+                    <strong>Storage Record #{{ alert.itemstoragelocationid }}</strong>
+                    <div class="muted">Batch: {{ alert.batch|default:"N/A" }}</div>
+                    <div class="muted">Available Quantity: {{ alert.availablequantity }}</div>
+                    <div class="muted">Reorder Level: {{ alert.reorderlevel }}</div>
                 </div>
             {% empty %}
                 <div class="item-card">
-                    <strong>No recent conversations yet.</strong>
+                    <strong>No low stock alerts found.</strong>
                 </div>
             {% endfor %}
         </div>

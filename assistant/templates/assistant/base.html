@@ -6,22 +6,15 @@
     <title>{% block title %}MediCentre Stock Assistant{% endblock %}</title>
     <style>
         :root {
-            --bg: #f4f7fb;
-            --surface: #ffffff;
-            --surface-soft: #f8fafc;
-            --line: #e2e8f0;
-            --text: #0f172a;
-            --muted: #64748b;
-            --primary: #2563eb;
-            --primary-soft: #dbeafe;
-            --green: #059669;
-            --green-soft: #d1fae5;
-            --amber: #d97706;
-            --amber-soft: #fef3c7;
-            --red: #dc2626;
-            --red-soft: #fee2e2;
-            --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-            --radius: 20px;
+            --bg: #202123;
+            --sidebar: #171717;
+            --panel: #212121;
+            --panel-soft: #2a2b32;
+            --text: #ececf1;
+            --muted: #a1a1aa;
+            --line: #343541;
+            --accent: #10a37f;
+            --accent-soft: rgba(16, 163, 127, 0.15);
         }
 
         * {
@@ -35,179 +28,224 @@
             color: var(--text);
         }
 
-        .layout {
+        .app-shell {
             display: flex;
             min-height: 100vh;
         }
 
         .sidebar {
-            width: 250px;
-            background: #f8fafc;
+            width: 290px;
+            background: var(--sidebar);
             border-right: 1px solid var(--line);
-            padding: 26px 16px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            padding: 18px 14px;
         }
 
         .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-
-        .brand-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
+            margin-bottom: 18px;
+            padding: 10px 12px;
         }
 
-        .brand-text h2 {
-            margin: 0;
-            font-size: 24px;
-            line-height: 1.1;
-        }
-
-        .brand-text p {
-            margin: 4px 0 0 0;
-            font-size: 14px;
+        .brand small {
+            display: block;
+            font-size: 13px;
             color: var(--muted);
+            margin-top: 4px;
+            font-weight: normal;
         }
 
-        .nav-links {
+        .sidebar-actions {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-bottom: 18px;
         }
 
-        .nav-links a {
+        .sidebar-link {
+            display: block;
             text-decoration: none;
-            color: #334155;
-            padding: 13px 14px;
-            border-radius: 14px;
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
             font-weight: 600;
             transition: 0.2s ease;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            background: var(--primary-soft);
-            color: var(--primary);
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--panel-soft);
+            border-color: #4b5563;
         }
 
-        .sidebar-note {
-            background: white;
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .sidebar-note h4 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-
-        .sidebar-note p {
-            margin: 0;
+        .history-title {
             color: var(--muted);
-            line-height: 1.5;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 14px 10px 10px 10px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .history-item {
+            display: block;
+            text-decoration: none;
+            color: var(--text);
+            background: transparent;
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid transparent;
+            transition: 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: var(--panel-soft);
+            border-color: var(--line);
+        }
+
+        .history-item-title {
             font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .history-item-time {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 16px;
+        }
+
+        .sidebar-footer a {
+            display: block;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+
+        .sidebar-footer a:hover {
+            background: var(--panel-soft);
+            color: var(--text);
         }
 
         .main {
             flex: 1;
-            padding: 26px;
+            display: flex;
+            justify-content: center;
+            padding: 24px;
         }
 
-        .topbar {
+        .main-inner {
+            width: 100%;
+            max-width: 980px;
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
+            flex-direction: column;
+        }
+
+        .page-header {
             margin-bottom: 20px;
         }
 
-        .top-pill {
-            background: white;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 10px 14px;
-            color: var(--muted);
-            font-weight: 600;
-            box-shadow: var(--shadow);
-        }
-
-        .hero {
-            background: white;
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 26px;
-            margin-bottom: 22px;
-        }
-
-        .hero h1 {
+        .page-header h1 {
             margin: 0 0 8px 0;
-            font-size: 38px;
+            font-size: 34px;
         }
 
-        .hero p {
+        .page-header p {
             margin: 0;
             color: var(--muted);
-            font-size: 16px;
             line-height: 1.6;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            background: #2b2d31;
+            color: var(--text);
+            border: 1px solid #3f3f46;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.95;
         }
 
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 22px;
+            gap: 14px;
+            margin-bottom: 18px;
         }
 
         .metric-card {
-            background: white;
+            background: var(--panel);
             border: 1px solid var(--line);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            display: flex;
-            gap: 14px;
-            align-items: center;
+            border-radius: 16px;
+            padding: 18px;
         }
-
-        .metric-icon {
-            width: 58px;
-            height: 58px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        .metric-blue { background: var(--primary-soft); color: var(--primary); }
-        .metric-green { background: var(--green-soft); color: var(--green); }
-        .metric-amber { background: var(--amber-soft); color: var(--amber); }
-        .metric-red { background: var(--red-soft); color: var(--red); }
 
         .metric-card h3 {
             margin: 0 0 8px 0;
             color: var(--muted);
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .metric-value {
-            font-size: 20px;
+            font-size: 28px;
             font-weight: bold;
             margin-bottom: 4px;
         }
@@ -219,73 +257,48 @@
 
         .grid-2 {
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 22px;
-            margin-bottom: 22px;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 18px;
         }
 
-        .panel {
-            background: white;
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 22px;
-        }
-
-        .panel h2 {
-            margin: 0 0 10px 0;
-            font-size: 24px;
-        }
-
-        .muted {
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 135px;
-            border: 1px solid var(--line);
-            border-radius: 16px;
+        .answer-block {
+            background: #2b2d31;
+            border: 1px solid #3f3f46;
+            border-radius: 14px;
             padding: 14px;
-            background: var(--surface-soft);
+            margin-top: 12px;
+        }
+
+        .answer-block h3 {
+            margin-top: 0;
             font-size: 16px;
-            resize: vertical;
+            color: #d4d4d8;
         }
 
-        button {
-            margin-top: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
+        .item-list {
+            display: grid;
+            gap: 12px;
         }
 
-        button:hover {
-            opacity: 0.95;
+        .item-card {
+            background: #2b2d31;
+            border: 1px solid #3f3f46;
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .item-card strong {
+            display: block;
+            margin-bottom: 6px;
         }
 
         .error {
-            margin-top: 14px;
-            background: var(--red-soft);
-            color: var(--red);
-            border: 1px solid #fecaca;
+            background: rgba(220, 38, 38, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(220, 38, 38, 0.35);
             border-radius: 12px;
             padding: 12px;
-            font-weight: bold;
-        }
-
-        .answer-box,
-        .content-box {
             margin-top: 14px;
-            background: var(--surface-soft);
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            padding: 14px;
         }
 
         pre {
@@ -295,21 +308,11 @@
             font-family: Consolas, monospace;
         }
 
-        .item-list {
+        .form-grid {
             display: grid;
+            grid-template-columns: 2fr 1fr auto;
             gap: 12px;
-        }
-
-        .item-card {
-            background: var(--surface-soft);
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 14px;
-        }
-
-        .item-card strong {
-            display: block;
-            margin-bottom: 6px;
+            align-items: end;
         }
 
         .badge {
@@ -320,14 +323,14 @@
             font-weight: bold;
         }
 
-        .badge-green { background: var(--green-soft); color: var(--green); }
-        .badge-red { background: var(--red-soft); color: var(--red); }
+        .badge-green {
+            background: rgba(5, 150, 105, 0.15);
+            color: #6ee7b7;
+        }
 
-        .footer-note {
-            text-align: center;
-            margin-top: 14px;
-            color: var(--muted);
-            font-size: 14px;
+        .badge-red {
+            background: rgba(220, 38, 38, 0.15);
+            color: #fca5a5;
         }
 
         @media (max-width: 1100px) {
@@ -340,8 +343,8 @@
             }
         }
 
-        @media (max-width: 820px) {
-            .layout {
+        @media (max-width: 860px) {
+            .app-shell {
                 flex-direction: column;
             }
 
@@ -352,46 +355,60 @@
             .metrics-grid {
                 grid-template-columns: 1fr;
             }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="layout">
+    <div class="app-shell">
         <aside class="sidebar">
-            <div>
-                <div class="brand">
-                    <div class="brand-icon">✚</div>
-                    <div class="brand-text">
-                        <h2>MediCentre</h2>
-                        <p>Stock Assistant AI</p>
-                    </div>
-                </div>
-
-                <div class="nav-links">
-                    <a class="active" href="{% url 'assistant:test_ollama' %}">Dashboard</a>
-                    <a href="{% url 'assistant:conversation_history' %}">History</a>
-                    <a href="/admin/">Admin</a>
-                </div>
+            <div class="brand">
+                MediCentre
+                <small>Stock Assistant AI</small>
             </div>
 
-            <div class="sidebar-note">
-                <h4>Assistant Help</h4>
-                <p>
-                    Ask questions about stock quantities, movement, batches,
-                    expiry dates, stock take sessions, and branch-linked items.
-                </p>
+            <div class="sidebar-actions">
+                <a href="{% url 'assistant:test_ollama' %}"
+                   class="sidebar-link {% if current_page == 'assistant' %}active{% endif %}">
+                    New Chat
+                </a>
+
+                <a href="{% url 'assistant:conversation_history' %}"
+                   class="sidebar-link {% if current_page == 'history' %}active{% endif %}">
+                    Conversation History
+                </a>
+            </div>
+
+            <div class="history-title">Recent Chats</div>
+
+            <div class="history-list">
+                {% for log in recent_logs %}
+                    <a href="{% url 'assistant:conversation_history' %}" class="history-item">
+                        <div class="history-item-title">
+                            {{ log.question|truncatechars:42 }}
+                        </div>
+                        <div class="history-item-time">
+                            {{ log.created_at }}
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="history-item">
+                        <div class="history-item-title">No saved conversations yet.</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="sidebar-footer">
+                <a href="/admin/">Admin</a>
             </div>
         </aside>
 
         <main class="main">
-            <div class="topbar">
-                <div class="top-pill">Stock Module Overview</div>
-            </div>
-
-            {% block content %}{% endblock %}
-
-            <div class="footer-note">
-                © 2026 MediCentre Stock Assistant
+            <div class="main-inner">
+                {% block content %}{% endblock %}
             </div>
         </main>
     </div>

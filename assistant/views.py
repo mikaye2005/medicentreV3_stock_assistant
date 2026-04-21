@@ -11,7 +11,9 @@ from legacydb.models import Tblitems, Tblitemstoragelocations, Tblstockchanges, 
 
 def build_dashboard_context():
     """
-    Build dashboard numbers and short lists from the real stock database.
+    Build lightweight stock summary values from the real stock database.
+    These are still available if needed in templates, even though the UI
+    will now be more chat-focused and minimal.
     """
     try:
         items_qs = Tblitems.objects.using("medicentre")
@@ -112,7 +114,7 @@ def test_ollama(request):
             except OllamaClientError as exc:
                 error = str(exc)
 
-    recent_logs = ConversationLog.objects.order_by("-created_at")[:5]
+    recent_logs = ConversationLog.objects.order_by("-created_at")[:12]
 
     context = {
         "question": question,
@@ -121,6 +123,7 @@ def test_ollama(request):
         "error": error,
         "prompt_used": prompt_used,
         "recent_logs": recent_logs,
+        "current_page": "assistant",
     }
     context.update(build_dashboard_context())
 
@@ -145,10 +148,14 @@ def conversation_history(request):
     if date_value:
         logs = logs.filter(created_at__date=date_value)
 
+    recent_logs = ConversationLog.objects.order_by("-created_at")[:12]
+
     context = {
         "logs": logs,
         "search_query": query,
         "search_date": date_value,
+        "recent_logs": recent_logs,
+        "current_page": "history",
     }
     context.update(build_dashboard_context())
 
