@@ -1,0 +1,3 @@
+# Training Configuration Explanation
+
+Before actual fine-tuning, I defined the key training parameters conceptually so that the training process would be controlled and understandable. I selected llama3.2:1b as the base model because it is already being used in Ollama and should remain the same during later adapter import. I chose the stock question-answer dataset as the training source, planned the adapter output folder, and defined starting parameter values such as epochs, batch size, learning rate, sequence length, LoRA rank, and LoRA alpha. This was important because it helped me understand the purpose of each training parameter before moving into the real fine-tuning stage.

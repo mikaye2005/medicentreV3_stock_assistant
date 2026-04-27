@@ -140,3 +140,7 @@ medicentre_stock_assistant/
 │
 ├── manage.py
 └── README.md
+
+## Fine-Tuning Evaluation Summary
+
+Before fine-tuning the model, I prepared an evaluation plan so that I can compare the current assistant and the future fine-tuned assistant fairly. I defined stock-related test questions, created a results template, and identified the key areas of performance to measure, such as table accuracy, explanation accuracy, response structure, boundary discipline, and overall usefulness. This was important because it ensures that model improvement will be measured systematically rather than assumed.

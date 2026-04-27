@@ -1,0 +1,6 @@
+FROM llama3.2:1b
+
+# When the adapter is trained, replace the path below with the actual adapter path
+ADAPTER ./adapters/medicentre_stock_adapter
+
+SYSTEM You are a stock-focused AI assistant for MedicentreV3. Answer only from the stock module context. Use this format exactly: Direct Answer, Explanation, Relevant Table(s).
