@@ -2,8 +2,7 @@ import json
 from pathlib import Path
 
 
-DATASET_PATH = Path("training_data/stock_qa_dataset_v1.jsonl")
-
+DATASET_PATH = Path("training_data/stock_qa_dataset_full.jsonl")
 
 def validate_dataset():
     """
